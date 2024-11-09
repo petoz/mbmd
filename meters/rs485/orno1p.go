@@ -16,14 +16,14 @@ func NewORNO1PProducer() Producer {
 	 * https://github.com/gituser-rk/orno-modbus-mqtt/blob/master/Register%20description%20OR-WE-514%26OR-WE-515.pdf
 	 */
 	ops := Opcodes{
-		Frequency: 0x130, // 16 bit, 0.01Hz
+		Frequency: 0x10A, // 16 bit, 0.01Hz
 
-		VoltageL1:       0x131, // 16 bit, 0.01V
-		CurrentL1:       0x139, // 16 bit, 0.001A
-		PowerL1:         0x140, // 32 bit, 0.001kW
-		ReactivePowerL1: 0x148, // 32 bit, 0.001kvar
-		ApparentPowerL1: 0x150, // 32 bit, 0.001kva
-		CosphiL1:        0x158, // 16 bit, 0,001
+		VoltageL1:       0x100, // 16 bit, 0.01V
+		CurrentL1:       0x102, // 16 bit, 0.001A
+		PowerL1:         0x104, // 32 bit, 0.001kW
+		ApparentPowerL1: 0x106, // 32 bit, 0.001kva
+		ReactivePowerL1: 0x108, // 32 bit, 0.001kvar
+		CosphiL1:        0x10B, // 16 bit, 0,001
 
 		VoltageL2:       0x132, // 16 bit, 0.01V
 		CurrentL2:       0x13B, // 32 bit, 0.001A
@@ -44,12 +44,12 @@ func NewORNO1PProducer() Producer {
 		ApparentPower: 0x156, // 32 bit, 0.001kva
 		Cosphi:        0x15B, // 16 bit, 0.001
 
-		Sum:   0xA000, //32 Bit, 0.01kwh
+		Sum:   0x10E, //32 Bit, 0.01kwh
 		SumT1: 0xA002, //32 Bit, 0.01kwh
 		SumT2: 0xA004, //32 Bit, 0.01kwh
 		//		SumT3:           0xA006, //32 Bit, 0.01kwh // currently not supported
 		//		SumT4:           0xA008, //32 Bit, 0.01kwh // currently not supported
-		ReactiveSum:   0xA01E, //32 Bit, 0.01kvarh
+		ReactiveSum:   0x140, //32 Bit, 0.01kvarh
 		ReactiveSumT1: 0xA020, //32 Bit, 0.01kvarh
 		ReactiveSumT2: 0xA022, //32 Bit, 0.01kvarh
 		//		ReactiveSumT3:   0xA024, //32 Bit, 0.01kvarh // currently not supported
@@ -99,7 +99,7 @@ func (p *ORNO1PProducer) snip32(iec Measurement, scaler ...float64) Operation {
 }
 
 func (p *ORNO1PProducer) Probe() Operation {
-	return p.snip16(VoltageL1, 100)
+	return p.snip32(VoltageL1, 100)
 }
 
 // Produce implements Producer interface
@@ -107,9 +107,14 @@ func (p *ORNO1PProducer) Produce() (res []Operation) {
 
 	for _, op := range []Measurement{
 		VoltageL1,
+	} {
+		res = append(res, p.snip32(op, 1000))
+	}
+
+	for _, op := range []Measurement{
 		Frequency,
 	} {
-		res = append(res, p.snip16(op, 100))
+		res = append(res, p.snip16(op, 10))
 	}
 
 	for _, op := range []Measurement{
@@ -119,9 +124,15 @@ func (p *ORNO1PProducer) Produce() (res []Operation) {
 	}
 
 	for _, op := range []Measurement{
-		PowerL1, ReactivePowerL1, ApparentPowerL1,
+		PowerL1, ApparentPowerL1,
 	} {
 		res = append(res, p.snip32(op, 1))
+	}
+
+	for _, op := range []Measurement{
+		ReactivePowerL1,
+	} {
+		res = append(res, p.snip32(op, 10000000))
 	}
 
 	for _, op := range []Measurement{

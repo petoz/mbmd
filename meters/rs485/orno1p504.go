@@ -8,7 +8,7 @@ func init() {
 
 var ops1p504 Opcodes = Opcodes{
 
-	Frequency:     0x02, // 16 bit, Hz
+	Frequency:     0x10A, // 16 bit, Hz
 	Voltage:       0x00, // 16 bit, V
 	Current:       0x01, // 16 bit, A
 	Power:         0x03, // 16 bit, W
