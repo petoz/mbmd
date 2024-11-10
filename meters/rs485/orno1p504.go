@@ -9,15 +9,15 @@ func init() {
 var ops1p504 Opcodes = Opcodes{
 
 	Frequency:     0x10A, // 16 bit, Hz
-	Voltage:       0x00, // 16 bit, V
-	Current:       0x01, // 16 bit, A
-	Power:         0x03, // 16 bit, W
-	ReactivePower: 0x04, // 16 bit, var
-	ApparentPower: 0x05, // 16 bit, va
-	Cosphi:        0x06, // 16 bit,
+	Voltage:       0x100, // 16 bit, V
+	Current:       0x102, // 16 bit, A
+	Power:         0x104, // 16 bit, W
+	ReactivePower: 0x108, // 16 bit, var
+	ApparentPower: 0x106, // 16 bit, va
+	Cosphi:        0x10B, // 16 bit,
 
-	Sum:         0x07, //32 Bit, wh
-	ReactiveSum: 0x09, //32 Bit, varh
+	Sum:         0x10E, //32 Bit, wh
+	ReactiveSum: 0x140, //32 Bit, varh
 }
 
 type ORNO1P504Producer struct {
@@ -74,15 +74,27 @@ func (p *ORNO1P504Producer) Probe() Operation {
 // Produce implements Producer interface
 func (p *ORNO1P504Producer) Produce() (res []Operation) {
 	for _, op := range []Measurement{
-		Power, ReactivePower, ApparentPower,
+		Power, ApparentPower,
 	} {
-		res = append(res, p.snip16(op, 1))
+		res = append(res, p.snip32(op, 1))
 	}
 
 	for _, op := range []Measurement{
-		Frequency, Voltage, Current,
+		ReactivePower,
+	} {
+		res = append(res, p.snip32(op, 10000000))
+	}
+
+	for _, op := range []Measurement{
+		Frequency,
 	} {
 		res = append(res, p.snip16(op, 10))
+	}
+
+	for _, op := range []Measurement{
+		Voltage, Current,
+	} {
+		res = append(res, p.snip32(op, 1000))
 	}
 
 	for _, op := range []Measurement{
@@ -94,7 +106,7 @@ func (p *ORNO1P504Producer) Produce() (res []Operation) {
 	for _, op := range []Measurement{
 		ReactiveSum, Sum,
 	} {
-		res = append(res, p.snip32(op, 1000))
+		res = append(res, p.snip32(op, 100))
 	}
 
 	return res
