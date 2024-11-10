@@ -252,6 +252,7 @@ manuals for definitive guidance):
 | BE MPM3MP | 3 | + | + | + | + | + | + | - | - |
 | KOSTAL Smart Energy Meter | 3 | + | + | + | + | + | + | + | - |
 | ORNO WE-504/514/515 | 1 | + | + | + | + | + | - | - | - |
+| ORNO WE-524/525/526 | 1 | + | + | + | + | + | - | - | - |
 | ORNO WE-516/517 | 3 | + | + | + | + | + | + | + | - |
 | iEM3000 Series | 3 | + | + | + | + | + | + | (+) | + |
 

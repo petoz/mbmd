@@ -30,6 +30,7 @@ mbmd inspect [flags]
                               JANITZA   Janitza B-Series meters
                               MPM       Bernecker Engineering MPM3PM meters
                               ORNO1P504 ORNO WE-504
+                              ORNO1P525 ORNO WE-524 & ORNO WE-525 & ORNO WE-526
                               ORNO1p    ORNO WE-514 & WE-515
                               ORNO3p    ORNO WE-516 & WE-517
                               PAC2200   Siemens PAC2200

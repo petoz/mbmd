@@ -38,6 +38,7 @@ test:
 
 build:
 	@echo Version: $(VERSION) $(BUILD_DATE)
+	# go build -v $(BUILD_TAGS) $(BUILD_ARGS)
 	GOOS=linux GOARCH=arm GOARM=7 go build -v $(BUILD_TAGS) $(BUILD_ARGS)
 
 publish-images:
